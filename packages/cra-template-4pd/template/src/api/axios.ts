@@ -2,7 +2,7 @@ import axios from 'axios';
 import { message } from 'antd';
 
 const instance = axios.create({
-    baseURL: '/api/v1',
+    baseURL: '',
 });
 
 instance.interceptors.request.use((config) => {

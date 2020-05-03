@@ -1,7 +1,12 @@
 {
     "name": "cra-template-4pd",
-    "version": "1.0.0",
-    "keywords": [ "react", "create-react-app", "template", "typescript" ],
+    "version": "1.0.1",
+    "keywords": [
+        "react",
+        "create-react-app",
+        "template",
+        "typescript"
+    ],
     "description": "The base TypeScript template for Create React App.",
     "repository": {
         "type": "git",
@@ -15,5 +20,8 @@
     "bugs": {
         "url": "https://github.com/facebook/create-react-app/issues"
     },
-    "files": [ "template", "template.json" ]
+    "files": [
+        "template",
+        "template.json"
+    ]
 }

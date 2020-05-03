@@ -7,7 +7,7 @@ import { AppState } from '../reducer';
 import { withRouter } from 'react-router-dom';
 
 const mapStateToProps = (state: AppState) => {
-    return state.monitor;
+    return state.dmeo;
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<DemoActions>) => ({
