@@ -7,14 +7,14 @@ import { AppState } from '../reducer';
 import { withRouter } from 'react-router-dom';
 
 const mapStateToProps = (state: AppState) => {
-    return state.dmeo;
+    return state.demo;
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<DemoActions>) => ({
     actions: bindActionCreators(
         {
-                getDemo,
-                setDemoData,
+            getDemo,
+            setDemoData,
         },
         dispatch
     ),

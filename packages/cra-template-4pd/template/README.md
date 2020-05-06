@@ -1,44 +1,38 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# cra-template-4pd
 
-## Available Scripts
+## 项目如何工作
 
-In the project directory, you can run:
+    `yarn start`
 
-### `npm start`
+## 如何联调
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```javascript
+module.exports = function(app) {
+  app.use(
+    '/api', // 设置要代理的请求请求前缀
+    createProxyMiddleware({
+      target: 'http://127.0.0.1:8051/', // 代理服务端url
+      changeOrigin: true,
+      headers: {
+        Host: '172.27.14.125:9000', // 代理服务端host
+        cookie: 'User-Token=a1b10b35-edcb-4726-882a-e2aa59f98d88', // 用户token设置
+      },
+    })
+  );
+};
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+# 优化
 
-### `npm test`
+## 开启包分析插件
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`.env`里设置 `BUNDLE_ANALYZER = true`即可开启打包分析插件
 
-### `npm run build`
+## 如何配置 DLL
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+项目默认不启用 dll，由开发者自行决定。如果决定启用 dll 可以在`lib/dll.dev.js`里来配置需要打包的类库
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+    `yarn run dll`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+运行此命令后会在`.env`文件里写入`DEV_DLL = true`如何想关闭 dll 删除此配置即可。
+以上示例为 dev 模式，prod 模式也同样道理运行`yarn run dllp`即可
