@@ -1,14 +1,20 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
-module.exports = function(app) {
+const fs = require('fs');
+const {
+    createProxyMiddleware
+} = require('http-proxy-middleware');
+module.exports = function (app) {
+    let proxyUrl = fs.readFileSync('.proxyUrl').toString();
+    fs.watch('.proxyUrl', eventType => {
+        if (eventType === 'change') {
+            proxyUrl = fs.readFileSync('.proxyUrl').toString();
+        }
+    });
     app.use(
-        // '/api',
+        ['/'],
         createProxyMiddleware({
-            // target: 'http://127.0.0.1:8051/',
+            target: proxyUrl,
             changeOrigin: true,
-            headers: {
-                // Host: '172.27.14.125:9000',
-                // cookie: 'User-Token=a1b10b35-edcb-4726-882a-e2aa59f98d88',
-            },
-        })
+            router: () => proxyUrl,
+        }),
     );
 };

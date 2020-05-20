@@ -6,21 +6,9 @@
 
 ## 如何联调
 
-```javascript
-module.exports = function(app) {
-  app.use(
-    '/api', // 设置要代理的请求请求前缀
-    createProxyMiddleware({
-      target: 'http://127.0.0.1:8051/', // 代理服务端url
-      changeOrigin: true,
-      headers: {
-        Host: '172.27.14.125:9000', // 代理服务端host
-        cookie: 'User-Token=a1b10b35-edcb-4726-882a-e2aa59f98d88', // 用户token设置
-      },
-    })
-  );
-};
-```
+在.proxyUrl 文件里输入需要链接的服务端 url 即可 example: http://xxxx.com
+
+服务端 cookie 设置，下载 chrome 插件 editthiscookie 启动服务打开调试页面，点击插件图标添加服务端需要的 cookie 即可
 
 # 优化
 
