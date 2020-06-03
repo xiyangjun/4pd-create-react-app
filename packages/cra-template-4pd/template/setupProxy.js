@@ -2,6 +2,7 @@ const fs = require('fs');
 const {
     createProxyMiddleware
 } = require('http-proxy-middleware');
+const proxyPath = ['/'];
 module.exports = function (app) {
     let proxyUrl = fs.readFileSync('.proxyUrl').toString();
     fs.watch('.proxyUrl', eventType => {
@@ -9,12 +10,15 @@ module.exports = function (app) {
             proxyUrl = fs.readFileSync('.proxyUrl').toString();
         }
     });
-    app.use(
-        ['/'],
-        createProxyMiddleware({
-            target: proxyUrl,
-            changeOrigin: true,
-            router: () => proxyUrl,
-        }),
-    );
+    if (proxyUrl.trim()) {
+        app.use(
+            proxyPath,
+            createProxyMiddleware({
+                target: proxyUrl,
+                changeOrigin: true,
+                router: () => proxyUrl,
+            }),
+        );
+    }
+
 };

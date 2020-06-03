@@ -6,7 +6,7 @@
 
 ## 如何联调
 
-在.proxyUrl 文件里输入需要链接的服务端 url 即可 example: http://xxxx.com
+在.proxyUrl 文件里输入需要链接的服务端 url example: http://xxxx.com, 然后在`setupProxy.js`中 找到`proxyPath`变量，设置要代理的请求路径即可
 
 服务端 cookie 设置，下载 chrome 插件 editthiscookie 启动服务打开调试页面，点击插件图标添加服务端需要的 cookie 即可
 

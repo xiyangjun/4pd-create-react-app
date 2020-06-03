@@ -1,4 +1,4 @@
-import axios from '../axios';
+import axios from './axios';
 import { ApiResponse } from 'shared/apiResponse';
 import { DemoSummaryDto } from 'shared/dto/demo';
 
