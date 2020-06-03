@@ -1,6 +1,6 @@
 {
     "name": "4pd-react-scripts",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "4pd Configuration and scripts for Create React App.",
     "repository": {
         "type": "git",
@@ -14,7 +14,7 @@
     "bugs": {
         "url": "https://github.com/facebook/create-react-app/issues"
     },
-    "files": [ "bin", "config", "lib", "scripts", "template", "template-typescript", "utils" ],
+    "files": ["bin", "config", "lib", "scripts", "template", "template-typescript", "utils"],
     "bin": {
         "react-scripts": "./bin/react-scripts.js"
     },
@@ -95,7 +95,7 @@
         }
     },
     "browserslist": {
-        "production": [ ">0.2%", "not dead", "not op_mini all" ],
+        "production": [">0.2%", "not dead", "not op_mini all"],
         "development": [
             "last 1 chrome version",
             "last 1 firefox version",
