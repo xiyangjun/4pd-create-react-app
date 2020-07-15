@@ -49,40 +49,142 @@ function verifyTypeScriptSetup() {
         writeJson(paths.appTsConfig, {});
         firstTimeSetup = true;
     }
+    writeJson(paths.appTsConfig, {});
+    firstTimeSetup = true;
+}
 
-    const isYarn = fs.existsSync(paths.yarnLockFile);
+const isYarn = fs.existsSync(paths.yarnLockFile);
 
-    // Ensure typescript is installed
-    let ts;
-    try {
-        ts = require(resolve.sync('typescript', {
-            basedir: paths.appNodeModules
-        }));
-    } catch (_) {
-        console.error(
-            chalk.bold.red(
-                `It looks like you're trying to use TypeScript but do not have ${chalk.bold(
-                    'typescript'
-                )} installed.`
-            )
-        );
-        console.error(
-            chalk.bold(
-                'Please install',
-                chalk.cyan.bold('typescript'),
-                'by running',
-                chalk.cyan.bold(isYarn ? 'yarn add typescript' : 'npm install typescript') + '.'
-            )
-        );
-        console.error(
-            chalk.bold(
-                'If you are not trying to use TypeScript, please remove the ' +
-                    chalk.cyan('tsconfig.json') +
-                    ' file from your package root (and any TypeScript files).'
-            )
-        );
-        console.error();
-        process.exit(1);
+// Ensure typescript is installed
+let ts;
+try {
+    // TODO: Remove this hack once `globalThis` issue is resolved
+    // https://github.com/jsdom/jsdom/issues/2961
+    const globalThisWasDefined = !!global.globalThis;
+
+    ts = require(resolve.sync('typescript', {
+        basedir: paths.appNodeModules,
+    }));
+
+    if (!globalThisWasDefined && !!global.globalThis) {
+        delete global.globalThis;
+    }
+} catch (_) {
+    console.error(
+        chalk.bold.red(
+            `It looks like you're trying to use TypeScript but do not have ${chalk.bold(
+          'typescript'
+        )} installed.`
+        )
+    );
+    console.error(
+        chalk.bold(
+            'Please install',
+            chalk.cyan.bold('typescript'),
+            'by running',
+            chalk.cyan.bold(
+                isYarn ? 'yarn add typescript' : 'npm install typescript'
+            ) + '.'
+        )
+    );
+    console.error(
+        chalk.bold(
+            'If you are not trying to use TypeScript, please remove the ' +
+            chalk.cyan('tsconfig.json') +
+            ' file from your package root (and any TypeScript files).'
+        )
+    );
+    console.error();
+    process.exit(1);
+}
+
+const compilerOptions = {
+    // These are suggested values and will be set when not present in the
+    // tsconfig.json
+    // 'parsedValue' matches the output value from ts.parseJsonConfigFileContent()
+    target: {
+        parsedValue: ts.ScriptTarget.ES5,
+        suggested: 'es5',
+    },
+    lib: {
+        suggested: ['dom', 'dom.iterable', 'esnext']
+    },
+    allowJs: {
+        suggested: true
+    },
+    skipLibCheck: {
+        suggested: true
+    },
+    esModuleInterop: {
+        suggested: true
+    },
+    allowSyntheticDefaultImports: {
+        suggested: true
+    },
+    strict: {
+        suggested: true
+    },
+    forceConsistentCasingInFileNames: {
+        suggested: true
+    },
+    noFallthroughCasesInSwitch: {
+        suggested: true
+    },
+
+    // These values are required and cannot be changed by the user
+    // Keep this in sync with the webpack config
+    module: {
+        parsedValue: ts.ModuleKind.ESNext,
+        value: 'esnext',
+        reason: 'for import() and import/export',
+    },
+    moduleResolution: {
+        parsedValue: ts.ModuleResolutionKind.NodeJs,
+        value: 'node',
+        reason: 'to match webpack resolution',
+    },
+    resolveJsonModule: {
+        value: true,
+        reason: 'to match webpack loader'
+    },
+    isolatedModules: {
+        value: true,
+        reason: 'implementation limitation'
+    },
+    noEmit: {
+        value: true
+    },
+    jsx: {
+        parsedValue: ts.JsxEmit.React,
+        suggested: 'react',
+    },
+    paths: {
+        value: undefined,
+        reason: 'aliased imports are not supported'
+    },
+};
+
+const formatDiagnosticHost = {
+    getCanonicalFileName: fileName => fileName,
+    getCurrentDirectory: ts.sys.getCurrentDirectory,
+    getNewLine: () => os.EOL,
+};
+
+const messages = [];
+let appTsConfig;
+let parsedTsConfig;
+let parsedCompilerOptions;
+try {
+    const {
+        config: readTsConfig,
+        error
+    } = ts.readConfigFile(
+        paths.appTsConfig,
+        ts.sys.readFile
+    );
+
+    if (error) {
+        throw new Error(ts.formatDiagnostic(error, formatDiagnosticHost));
     }
 
     const compilerOptions = {
@@ -93,13 +195,27 @@ function verifyTypeScriptSetup() {
             parsedValue: ts.ScriptTarget.ES5,
             suggested: 'es5'
         },
-        lib: { suggested: ['dom', 'dom.iterable', 'esnext'] },
-        allowJs: { suggested: true },
-        skipLibCheck: { suggested: true },
-        esModuleInterop: { suggested: true },
-        allowSyntheticDefaultImports: { suggested: true },
-        strict: { suggested: true },
-        forceConsistentCasingInFileNames: { suggested: true },
+        lib: {
+            suggested: ['dom', 'dom.iterable', 'esnext']
+        },
+        allowJs: {
+            suggested: true
+        },
+        skipLibCheck: {
+            suggested: true
+        },
+        esModuleInterop: {
+            suggested: true
+        },
+        allowSyntheticDefaultImports: {
+            suggested: true
+        },
+        strict: {
+            suggested: true
+        },
+        forceConsistentCasingInFileNames: {
+            suggested: true
+        },
         // TODO: Enable for v4.0 (#6936)
         // noFallthroughCasesInSwitch: { suggested: true },
 
@@ -115,9 +231,17 @@ function verifyTypeScriptSetup() {
             value: 'node',
             reason: 'to match webpack resolution'
         },
-        resolveJsonModule: { value: true, reason: 'to match webpack loader' },
-        isolatedModules: { value: true, reason: 'implementation limitation' },
-        noEmit: { value: true },
+        resolveJsonModule: {
+            value: true,
+            reason: 'to match webpack loader'
+        },
+        isolatedModules: {
+            value: true,
+            reason: 'implementation limitation'
+        },
+        noEmit: {
+            value: true
+        },
         jsx: {
             parsedValue: ts.JsxEmit.React,
             suggested: 'react'
@@ -136,7 +260,10 @@ function verifyTypeScriptSetup() {
     let parsedTsConfig;
     let parsedCompilerOptions;
     try {
-        const { config: readTsConfig, error } = ts.readConfigFile(
+        const {
+            config: readTsConfig,
+            error
+        } = ts.readConfigFile(
             paths.appTsConfig,
             ts.sys.readFile
         );
@@ -181,7 +308,12 @@ function verifyTypeScriptSetup() {
     }
 
     for (const option of Object.keys(compilerOptions)) {
-        const { parsedValue, value, suggested, reason } = compilerOptions[option];
+        const {
+            parsedValue,
+            value,
+            suggested,
+            reason
+        } = compilerOptions[option];
 
         const valueToCheck = parsedValue === undefined ? value : parsedValue;
         const coloredOption = chalk.cyan('compilerOptions.' + option);
@@ -201,7 +333,7 @@ function verifyTypeScriptSetup() {
                 `${coloredOption} ${chalk.bold(
                     valueToCheck == null ? 'must not' : 'must'
                 )} be ${valueToCheck == null ? 'set' : chalk.cyan.bold(value)}` +
-                    (reason != null ? ` (${reason})` : '')
+                (reason != null ? ` (${reason})` : '')
             );
         }
     }
