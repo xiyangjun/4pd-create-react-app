@@ -5,7 +5,7 @@ const instance = axios.create({
     baseURL: '',
 });
 
-instance.interceptors.request.use((config) => {
+instance.interceptors.request.use(config => {
     if (config.method === 'get') {
         if (!config.params) {
             config.params = {};
@@ -15,7 +15,7 @@ instance.interceptors.request.use((config) => {
     return config;
 });
 instance.interceptors.response.use(
-    (response) => {
+    response => {
         const { status, error } = response.data;
         if (status !== '0') {
             message.error(`code：${error}`);
@@ -23,9 +23,10 @@ instance.interceptors.response.use(
         }
         return response.data;
     },
-    (error) => {
-        message.error(error.toString());
-        return Promise.reject(error.toString());
+    error => {
+        const errorMsg = error.response.data?.msg || error.toString();
+        message.error(errorMsg);
+        return Promise.reject(error);
     },
 );
 
