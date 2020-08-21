@@ -563,7 +563,7 @@ module.exports = function (webpackEnv) {
       isDll &&
       new webpack.DllReferencePlugin({
         context: __dirname,
-        manifest: path.resolve(paths.appPath, `lib/${DLL_DIR}/manifest.json`)
+        manifest: `${DLL_DIR}/manifest.json`
       }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
@@ -590,7 +590,7 @@ module.exports = function (webpackEnv) {
       ),
       isDll &&
       new AddAssetHtmlPlugin({
-        filepath: path.resolve(paths.appPath, `lib/${DLL_DIR}/lib.*.js`),
+        filepath: `${DLL_DIR}/lib.*.js`,
         includeSourcemap: false
       }),
       // Inlines the webpack runtime script. This script is too small to warrant
