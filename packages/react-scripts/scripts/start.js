@@ -7,7 +7,7 @@
  */
 // @remove-on-eject-end
 'use strict';
-
+const startTime = Date.now();
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
@@ -47,6 +47,8 @@ const openBrowser = require('react-dev-utils/openBrowser');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
 const createDevServerConfig = require('../config/webpackDevServer.config');
+const forkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
@@ -119,6 +121,38 @@ checkBrowsers(paths.appPath, isInteractive)
       useTypeScript,
       tscCompileOnError,
       webpack,
+    });
+
+    let tsMessagesPromise;
+    let tsMessagesResolver;
+    if (useTypeScript) {
+      compiler.hooks.beforeCompile.tap('beforeCompile', () => {
+        tsMessagesPromise = new Promise(resolve => {
+          tsMessagesResolver = msgs => resolve(msgs);
+        });
+      });
+  
+      forkTsCheckerWebpackPlugin
+        .getCompilerHooks(compiler)
+        .receive.tap('afterTypeScriptCheck', (diagnostics, lints) => {
+          const allMsgs = [...diagnostics, ...lints];
+          const format = message =>
+            `${message.file}\n${typescriptFormatter(message, true)}`;
+  
+          tsMessagesResolver({
+            errors: allMsgs.filter(msg => msg.severity === 'error').map(format),
+            warnings: allMsgs
+              .filter(msg => msg.severity === 'warning')
+              .map(format),
+          });
+        });
+    }
+
+    compiler.hooks.done.tap('done', async () => {
+      const endTime = Date.now();
+      const time = (endTime - startTime) / 1000;
+      await tsMessagesPromise;
+      console.log(`complier time: ${time}`);
     });
     // Load proxy config
     const proxySetting = require(paths.appPackageJson).proxy;

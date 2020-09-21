@@ -32,6 +32,15 @@ const dllConfig = {
                 use: ['style-loader', 'css-loader']
             },
             {
+                test: /\.less$/,
+                use: ['style-loader', 'css-loader', {
+                    loader: 'less-loader',
+                    options: {
+                        javascriptEnabled: true,
+                    }
+                }]
+            },
+            {
                 test: /\.(png|svg|jpg|gif)$/,
                 use: 'file-loader'
             },
