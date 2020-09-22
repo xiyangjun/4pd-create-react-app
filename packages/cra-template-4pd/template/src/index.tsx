@@ -8,9 +8,11 @@ import 'normalize.css';
 import 'antd/dist/antd.css';
 import './react/style/index.less';
 import './react/style/common.less';
+import ProxyList from './react/component/proxyList.component';
 
 ReactDOM.render(
     <Provider store={store}>
+        {ProxyList && <ProxyList />}
         <App />
     </Provider>,
     document.getElementById('app')
