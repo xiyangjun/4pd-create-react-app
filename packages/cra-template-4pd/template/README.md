@@ -6,9 +6,22 @@
 
 ## 如何联调
 
-在.proxyUrl 文件里输入需要链接的服务端 url example: http://xxxx.com, 然后在`setupProxy.js`中 找到`proxyPath`变量，设置要代理的请求路径即可
+1. 在`.proxyUrl`中输入你的代理地址即可
+3. 如果服务端需要token验证，在浏览器控制台自己设置需要的cookie即可
+2. 如果需要频繁切换代理地址，请到[easy-mock](http://172.27.69.3:8300/editor/5f6c1b86e5cc3c001d46273e/5f6c1ba1e5cc3c001d462740)设置你的代理列表，设置代理列表需要一个`key`来标识你自己的代理，这个`key`可以在.env.development文件用`PROXY_TARGET_NAME`来设置
 
-服务端 cookie 设置，下载 chrome 插件 editthiscookie 启动服务打开调试页面，点击插件图标添加服务端需要的 cookie 即可
+示例如下：
+`PROXY_TARGET_NAME=aios`
+服务端返回数据
+```json
+{
+  "data": {
+    "aios": ["http://xxx", "http://xxx.xxx"],
+    "xxx": []
+  }
+}
+```
+当你`yarn start`启动后就会在页面右下角看到一个三角形小图标，点击小图标就可以看到代理列表，选择任意地址进行切换
 
 # 优化
 

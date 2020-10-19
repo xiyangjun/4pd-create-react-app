@@ -28,7 +28,8 @@
             "eslint-config-prettier": "^6.10.1",
             "http-proxy-middleware": "^1.0.3",
             "animate.css": "^3.7.2",
-            "axios": "^0.19.2"
+            "axios": "^0.19.2",
+            "web-vitals": "^0.2.2"
         }
     }
 }

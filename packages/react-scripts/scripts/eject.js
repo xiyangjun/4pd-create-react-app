@@ -264,7 +264,7 @@ inquirer
           content
             // Remove react-scripts types
             .replace(
-              /^\s*\/\/\/\s*<reference\s+types.+?"react-scripts".*\/>.*(?:\n|$)/gm,
+              /^\s*\/\/\/\s*<reference\s+types.+?"4pd-react-scripts".*\/>.*(?:\n|$)/gm,
               ''
             )
             .trim() + os.EOL;
@@ -297,7 +297,7 @@ inquirer
         appPath,
         'node_modules',
         '.bin',
-        'react-scripts.cmd'
+        '4pd-react-scripts.cmd'
       );
       let windowsCmdFileContent;
       if (process.platform === 'win32') {

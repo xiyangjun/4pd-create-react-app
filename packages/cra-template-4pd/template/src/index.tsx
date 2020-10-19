@@ -9,6 +9,7 @@ import 'antd/dist/antd.css';
 import './react/style/index.less';
 import './react/style/common.less';
 import ProxyList from './react/component/proxyList.component';
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <Provider store={store}>
@@ -17,3 +18,5 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('app')
 );
+
+reportWebVitals();

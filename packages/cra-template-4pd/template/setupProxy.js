@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const kgProxyPath = ['/'];
+const serverProxyPath = ['/'];
 const devProxyPath = ['/dev/proxy'];
 
 module.exports = function (app) {
@@ -25,7 +25,7 @@ module.exports = function (app) {
     // 更新代理的url
     if (proxyUrl.trim()) {
         app.use(
-            kgProxyPath,
+            serverProxyPath,
             createProxyMiddleware({
                 target: proxyUrl,
                 changeOrigin: true,

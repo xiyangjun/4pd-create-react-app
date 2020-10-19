@@ -395,7 +395,7 @@ module.exports = function (webpackEnv) {
                     'babel-plugin-named-asset-import',
                     'babel-preset-react-app',
                     'react-dev-utils',
-                    'react-scripts',
+                    '4pd-react-scripts',
                   ]
                 ),
                 // @remove-on-eject-end
