@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const serverProxyPath = ['/'];
+const serverProxyPath = ['/api'];
 const devProxyPath = ['/dev/proxy'];
 
 module.exports = function (app) {
